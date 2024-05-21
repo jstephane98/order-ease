@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        /*Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->unique()->nullable();
@@ -25,6 +25,16 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+        */
+
+        Schema::table('USERS', function (Blueprint $table) {
+            $table->string('email')->nullable();
+            $table->string("password")->nullable();
+            $table->string("social_name")->nullable()->comment("Name of social connection (google, facebook or etc..)");
+            $table->string("social_id")->nullable()->comment("Unique user ID in the social network");
+            $table->mediumText("social_token")->nullable();
+            $table->mediumText("social_refresh_token")->nullable();
+        });
     }
 
     /**
@@ -32,6 +42,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+//        Schema::dropIfExists('users');
+
+        Schema::table('USERS', function (Blueprint $table) {
+            $table->dropColumn(["email", "password", "social_name", "social_id", "social_token", "social_refresh_token"]);
+        });
     }
 };
