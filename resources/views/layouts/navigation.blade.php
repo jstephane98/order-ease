@@ -32,26 +32,36 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                        @guest
+                            <x-dropdown-link :href="route('login')">
+                                {{ __('Se connecter') }}
                             </x-dropdown-link>
-                        </form>
+
+                            <x-dropdown-link :href="route('register')">
+                                {{ __("S'inscrire") }}
+                            </x-dropdown-link>
+                        @else
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('Profile') }}
+                            </x-dropdown-link>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logout')"
+                                                 onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                    {{ __('Log Out') }}
+                                </x-dropdown-link>
+                            </form>
+                        @endguest
                     </x-slot>
                 </x-dropdown>
 
-                <button class="ml-2 text-gray-700 hover:text-gray-600">
+                <a href="{{ route('panier') }}" class="ml-2 text-gray-700 hover:text-gray-600">
                     <i class='bx bx-cart-alt text-3xl'></i>
-                </button>
+                </a>
             </div>
 
             <!-- Hamburger -->
@@ -70,11 +80,6 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->USR_NAME }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}

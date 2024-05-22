@@ -10,6 +10,8 @@ class Article extends Model
 
     protected $table = 'ARTICLES';
 
+    protected $keyType = 'string';
+
     protected $fillable = [
         'ART_CODE',
         'ART_LIB',

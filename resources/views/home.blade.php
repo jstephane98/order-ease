@@ -34,6 +34,7 @@
                                 data-article-lebele="{{ $article->ART_LIB }}"
                                 data-article-amount="{{ $article->ART_P_EURO }}€"
                                 id="btn-cart-{{ $article->ART_CODE }}"
+                                data-article-code="{{ $article->ART_CODE }}"
                                 class="text-white bg-red-600 p-2 rounded-md font-bold hover:bg-red-700 btn-cart">
                             Ajouter au panier
                         </button>
@@ -56,29 +57,65 @@
                 const libele = el.getAttribute('data-article-lebele');
                 const amount = el.getAttribute('data-article-amount');
                 const id = el.getAttribute('id')
+                const code = el.getAttribute('data-article-code')
 
-                UIkit.util.on('#' + id, 'click', function (e) {
+                UIkit.util.on('#' + id, 'click', (e) => {
                     e.preventDefault();
                     e.target.blur();
 
-                    // Send data to cart
-
-                    // Open Modal
-                    UIkit.modal.dialog(`
-                        <div class="pt-3">
-                            <h1 class="text-center text-2xl font-bold"><i class='bx bx-check text-white bg-green-400 rounded-full'></i> Ajouté au panier</h1>
-                            <hr>
-                            <div class="flex justify-between p-2 items-center">
-                                <img src="`+ img +`" alt="" class="w-[80px] h-[80px] text-center">
-                                <span class="font-bold">`+ libele +`</span>
-                                <span class="text-red-600 font-bold">`+ amount +`</span>
+                    @guest
+                        // Open Modal
+                        UIkit.modal.dialog(`
+                            <div class="pt-3">
+                                <h1 class="text-center text-2xl font-bold"><i class='bx bx-x text-white bg-red-400 rounded-full'></i> Ajout au panier </h1>
+                                <hr>
+                                <div class="flex justify-between p-2 items-center">
+                                    <img src="` + img + `" alt="" class="w-[80px] h-[80px] text-center">
+                                    <span class="font-bold">` + libele + `</span>
+                                    <span class="text-red-600 font-bold">` + amount + `</span>
+                                </div>
+                                <div class="text-center pb-3">Connecter vous pour continuer <a href="{{ route('login') }}" class="font-bold">Se connecter</a></div>
                             </div>
-                            <div class="text-center pb-3"><button class="rounded text-white font-semibold bg-red-500 hover:bg-red-600 p-2">Voir le panier</button></div>
-                        </div>
-                    `);
+                        `);
+                    @else
+                        // Send data to cart
+                        addCart('/api/add-cart', {
+                            "ART_CODE": code,
+                            "USR_NAME": "{{ Auth::user()->USR_NAME }}",
+                            "QUANTITY": 1,
+                            "INCREMENT": 1
+                        }).then((data) => {
+                            console.log(data);
+                        });
+
+                        // Open Modal
+                        UIkit.modal.dialog(`
+                            <div class="pt-3">
+                                <h1 class="text-center text-2xl font-bold"><i class='bx bx-check text-white bg-green-400 rounded-full'></i> Ajouté au panier</h1>
+                                <hr>
+                                <div class="flex justify-between p-2 items-center">
+                                    <img src="` + img + `" alt="" class="w-[80px] h-[80px] text-center">
+                                    <span class="font-bold">` + libele + `</span>
+                                    <span class="text-red-600 font-bold">` + amount + `</span>
+                                </div>
+                                <div class="text-center pb-3"><a href="{{ route('panier') }}"" class="rounded text-white font-semibold bg-red-500 hover:bg-red-600 p-2 hover:text-white">Voir le panier</a></div>
+                            </div>
+                        `);
+                    @endguest
                 });
             });
 
+            async function addCart(url = "", data = {}) {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(data),
+                });
+                return response.json();
+            }
         </script>
     @endsection
 </x-app-layout>
