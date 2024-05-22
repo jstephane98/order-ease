@@ -14,9 +14,11 @@
                 <div class="grid justify-between grid-cols-2 bg-white overflow-hidden shadow-sm hover:shadow-xl sm:rounded-sm transition ease-in-out duration-150 mb-4 p-4">
                     <div class="flex m-3">
                         <img src="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}" alt="" class="w-[60%] h-[60%] mr-5">
-                        <div class="">
-                            <p class="font-bold text-blue-950">{{ $article->ART_LIB }}</p>
-                            <p class="text-sm text-gray-500">CODE: {{ $article->ART_CODE }}</p>
+                        <div class="flex flex-col ">
+                            <a class="hover:no-underline" href="{{ route('show-article', $article->ART_CODE) }}">
+                                <span class="font-bold text-blue-950">{{ $article->ART_LIB }}</span>
+                            </a>
+                            <span class="text-sm text-gray-500">CODE: {{ $article->ART_CODE }}</span>
                         </div>
                     </div>
 

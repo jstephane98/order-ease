@@ -120,9 +120,11 @@
                         <p class="mb-0 text-xm font-bold">Frais de mise à disposition</p>
                         <hr class="mt-0">
                         <div class="text-center">
-                            <a href="{{ route('panier', $step == null ? 'livraison' : 'confirmation') }}" class="text-white bg-red-600 p-2 rounded-md font-bold hover:bg-red-700 btn-cart mt-5 w-full hover:no-underline hover:text-white">
-                                Valider @if(is_null($step)) mon panier @elseif($step == 'livraison') ma livraison @else @endif
-                            </a>
+                            @if($quantity)
+                                <a href="{{ route('panier', $step == null ? 'livraison' : 'confirmation') }}" id="btn-" class="text-white bg-red-600 p-2 rounded-md font-bold hover:bg-red-700 btn-cart mt-5 w-full hover:no-underline hover:text-white">
+                                    Valider @if(is_null($step)) mon panier @elseif($step == 'livraison') ma livraison @else @endif
+                                </a>
+                            @endif
                         </div>
                     </div>
 

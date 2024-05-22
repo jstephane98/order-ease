@@ -16,4 +16,9 @@ class HomeController extends Controller
 
         return view('home', compact('articles'));
     }
+
+    public function showArticle(Article $article)
+    {
+        return view('article', compact('article'));
+    }
 }

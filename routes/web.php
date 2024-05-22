@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/panier/{step?}', [CartController::class, 'showCart'])->name('panier');
+Route::get('/article/{article:ART_CODE}', [HomeController::class, 'showArticle'])->name("show-article");
+
+Route::middleware('auth')->group(function () {
+    Route::get('/panier/{step?}', [CartController::class, 'showCart'])->name('panier');
+});
 
 Route::get('/dashboard', function () {
     return view('home');
