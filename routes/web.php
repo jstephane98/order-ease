@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::any('/', [HomeController::class, 'home'])->name('home');
 Route::get('/article/{article:ART_CODE}', [HomeController::class, 'showArticle'])->name("show-article");
 
 Route::middleware('auth')->group(function () {
