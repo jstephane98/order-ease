@@ -29,7 +29,7 @@
                 {{ $slot }}
 
                 {{-- Social Link --}}
-                <div class="mt-6 w-full flex flex-row uppercase border-0 after:flex-grow after:flex-shrink after:basis-[auto] after:h-[12px] after:m-0 after:border-b-[1px] after:ml-1.5 before:flex-grow before:flex-shrink before:basis-[auto] before:h-[12px] before:m-0 before:border-b-[1px] before:mr-1.5">
+                {{--<div class="mt-6 w-full flex flex-row uppercase border-0 after:flex-grow after:flex-shrink after:basis-[auto] after:h-[12px] after:m-0 after:border-b-[1px] after:ml-1.5 before:flex-grow before:flex-shrink before:basis-[auto] before:h-[12px] before:m-0 before:border-b-[1px] before:mr-1.5">
                     <span>ou</span>
                 </div>
 
@@ -42,7 +42,7 @@
                         <i class='bx bxl-facebook-circle bx-sm mr-2' ></i>
                         <span>Continuer avec Facebook</span>
                     </a>
-                </div>
+                </div>--}}
             </div>
         </div>
     </body>

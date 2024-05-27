@@ -10,7 +10,7 @@
 
             <div class="filter mb-5 bg-blue-100 border border-blue-500 rounded p-5">
                 <h2 class="text-xl font-bold flex items-center">
-                    <i class='bx bx-filter'></i>
+                    <i class='bx bx-slider'></i>
                     <span>Recherche avancée</span>
                 </h2>
                 <form id="filter" method="POST" action="{{ route('home') }}">

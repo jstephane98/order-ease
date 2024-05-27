@@ -7,7 +7,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login.store') }}">
         @csrf
 
         <!-- Email Address -->
@@ -32,12 +32,12 @@
                 {{ __("Se connecter") }}
             </button>
 
-            <div class="">
+            {{--<div class="">
                 <span>{{ __("Vous n'avez pas de compte ?") }}</span>
                 <a class="text-cyan-700 font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
                     {{ __('Inscription') }}
                 </a>
-            </div>
+            </div>--}}
         </div>
     </form>
 </x-guest-layout>

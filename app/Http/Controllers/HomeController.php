@@ -25,8 +25,6 @@ class HomeController extends Controller
         $perPage = $request->input('per_page') ?? 5;
         $page = $request->input('page') ?? 1;
 
-//        dd($page);
-
         $articles = Article::when($famille, function (Builder $query) use ($famille) {
             $query->where('FAR_CODE', $famille);
         })
@@ -42,8 +40,6 @@ class HomeController extends Controller
         ->paginate(perPage: $perPage, page: $page);
 
         $current_page = $articles->currentPage();
-
-//        dd($current_page);
 
         $filtersData = [
             "ART_TYPE" => config("search.ART_TYPE"),
