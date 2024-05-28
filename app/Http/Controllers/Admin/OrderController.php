@@ -17,8 +17,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page');
-        $page = $request->get('page');
+        $perPage = $request->get('per_page') ?? 50;
+        $page = $request->get('page') ?? 1;
 
         $orders = Order::with(['user'])->latest()->paginate(perPage: $perPage, page: $page);
 

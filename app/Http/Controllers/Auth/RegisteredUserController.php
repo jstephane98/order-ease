@@ -25,16 +25,17 @@ class RegisteredUserController extends Controller
         return view('auth.register');
     }
 
+
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws ValidationException
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', Rules\Password::defaults()],
+            'type' => ['required', 'in:' . implode(",", User::TYPE_ACCOUNT)]
         ], [
             'email.unique' => "Cet email est déjà existant, veillez vous connecter."
         ]);
@@ -42,12 +43,12 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'type' => $request->post('type'),
+            'name' => $request->post('name')
         ]);
 
 //        event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->back()->with('success', 'Utilisateur créé avec succès !');
     }
 }

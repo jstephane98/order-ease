@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -28,6 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->middleware('is_admin')->group(function () {
        Route::get("/orders", [OrderController::class, 'index'])->name('admin:order.index');
        Route::get("/orders/{id}", [OrderController::class, 'show'])->name('admin:order.show');
+
+       // Users
+        Route::get('/users', [UserController::class, 'index'])->name("admin:user.index");
+        Route::post('register', [RegisteredUserController::class, 'store'])->name("store:user");
     });
 });
 
