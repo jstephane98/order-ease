@@ -62,7 +62,7 @@
                             @forelse($paniers as $panier)
                                 <div class="bg-white p-4 rounded shadow-m mb-4 flex justify-between">
                                     <div class="flex">
-                                        <img src="data:image/jpeg;base64,{{ base64_encode($panier->article->ART_IMAGE) }}" alt="" class="w-[120px] h-[120px]">
+                                        <img src="{{ $panier->article->ART_IMAGE }}" alt="" class="w-[120px] h-[120px]">
 
                                         <div class="flex flex-col ml-3 mr-3">
                                             <span class="font-bold text-blue-950 text-sm">{{ $panier->article->ART_LIB }}</span>

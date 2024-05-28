@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('home');
+        return Auth::user()->type === "ADMIN" ? redirect()->route("admin:order.index") : redirect()->route('home');
     }
 
     /**

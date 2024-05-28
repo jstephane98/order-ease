@@ -40,7 +40,6 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'USR_NAME' => Str::upper(Str::random(6)),
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

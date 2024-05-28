@@ -121,14 +121,17 @@ class CartController extends Controller
         }
 
         if ($step === "completed") {
-            Auth::user()->orders()->create([
+            $order = Auth::user()->orders()->create([
                 "NBR_ART" => $quantity,
                 "status" => "INCOMPLETE",
                 "price" => $totalPanier
             ]);
 
-            $paniers->each(function (Panier $panier) {
-                return $panier->update(['STATUS' => TRUE]);
+            $paniers->each(function (Panier $panier) use ($order) {
+                return $panier->update([
+                    'STATUS' => TRUE,
+                    "order_id" => $order->id
+                ]);
             });
         }
 

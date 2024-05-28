@@ -8,13 +8,13 @@
                 <div class="flex">
                     <div class="cursor-pointer">
                         <div class="p-3 rounded border-[1px] border-gray-400">
-                            <img class="w-[100px] h-[100px]" src="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}" alt="">
+                            <img class="w-[100px] h-[100px]" src="{{ $article->ART_IMAGE }}" alt="">
                         </div>
                     </div>
 
                     <div class="">
                         <div class="p-10 border-[1px] border-gray-400 rounded ml-4">
-                            <img class="" src="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}" alt="">
+                            <img class="" src="{{ $article->ART_IMAGE }}" alt="">
                         </div>
                     </div>
                 </div>

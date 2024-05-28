@@ -26,7 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/save', [OrderController::class, 'store'])->name('orders.save');
 
     Route::prefix('admin')->middleware('is_admin')->group(function () {
-       Route::get("/orders", [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin:order.index');
+       Route::get("/orders", [OrderController::class, 'index'])->name('admin:order.index');
+       Route::get("/orders/{id}", [OrderController::class, 'show'])->name('admin:order.show');
     });
 });
 

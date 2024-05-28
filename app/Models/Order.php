@@ -21,6 +21,14 @@ class Order extends Model
         );
     }
 
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, array $attributes) => $value === "INCOMPLETE" ? "Crée" : "Valider",
+            set: fn($value) => $value,
+        );
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

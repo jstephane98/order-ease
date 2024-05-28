@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\ImageCast;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
@@ -123,4 +125,9 @@ class Article extends Model
         'XXX_MAT',
         'XXX_NSERIE',
     ];
+
+    protected $casts = [
+        "ART_IMAGE" => ImageCast::class
+    ];
+
 }

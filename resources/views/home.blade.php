@@ -77,7 +77,7 @@
             @foreach($articles as $article)
                 <div class="flex justify-between grid-cols-2 bg-white overflow-hidden shadow-sm hover:shadow-xl sm:rounded-sm transition ease-in-out duration-150 mb-4 p-4">
                     <div class="flex m-3">
-                        <img src="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}" alt="" class="w-[10rem] mr-5">
+                        <img src="{{ $article->ART_IMAGE }}" alt="" class="w-[10rem] mr-5">
                         <div class="flex flex-col ">
                             <a class="hover:no-underline" href="{{ route('show-article', $article->ART_CODE) }}">
                                 <span class="font-bold text-blue-950">{{ $article->ART_LIB }}</span>
@@ -96,7 +96,7 @@
                             <span>Sur commande - en retrait magasin</span>
                         </span>
                         </p>
-                        <button data-article-image="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}"
+                        <button data-article-image="{{ $article->ART_IMAGE }}"
                                 data-article-lebele="{{ $article->ART_LIB }}"
                                 data-article-amount="{{ $article->ART_P_EURO }}€"
                                 id="btn-cart-{{ $article->ART_CODE }}"
