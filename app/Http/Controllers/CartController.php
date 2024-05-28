@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Order;
 use App\Models\Panier;
 use App\Models\User;
 use Auth;
@@ -20,14 +21,14 @@ class CartController extends Controller
     {
         $this->validate($request, [
             'ART_CODE' => ['required', 'exists:ARTICLES,ART_CODE'],
-            'USR_NAME' => ['required', 'exists:USERS,USR_NAME'],
+            'user_id' => ['required', 'exists:WEB_USERS,id'],
             'QUANTITY' => ['required', 'integer'],
             'INCREMENT' => ['required', 'bool']
         ], [
 
         ]);
 
-        $panier = Panier::where('USR_NAME', $request->post('USR_NAME'))
+        $panier = Panier::where('user_id', $request->post('user_id'))
             ->where('ART_CODE', $request->post('ART_CODE'))
             ->where('STATUS', FALSE)
             ->first();
@@ -43,13 +44,13 @@ class CartController extends Controller
         else {
             $panier = Panier::create([
                 'ART_CODE' => $request->post('ART_CODE'),
-                'USR_NAME' => $request->post('USR_NAME'),
+                'user_id' => $request->post('user_id'),
                 'QUANTITY' => $request->post('QUANTITY'),
             ]);
         }
 
         $paniers = Panier::with('article')
-            ->where('USR_NAME', $request->post('USR_NAME'))
+            ->where('user_id', $request->post('user_id'))
             ->where('STATUS', FALSE)
             ->get();
 
@@ -71,18 +72,18 @@ class CartController extends Controller
     {
         $this->validate($request, [
             'ART_CODE' => ["required", "exists:ARTICLES,ART_CODE"],
-            'USR_NAME' => ['required', 'exists:USERS,USR_NAME'],
+            'user_id' => ['required', 'exists:WEB_USERS,id'],
         ]);
 
         $artPanier = Panier::where('ART_CODE', $request->post('ART_CODE'))
-            ->where('USR_NAME', $request->post('USR_NAME'))
+            ->where('user_id', $request->post('user_id'))
             ->where('STATUS', FALSE)
             ->first();
 
         $artPanier->delete();
 
         $paniers = Panier::with('article')
-            ->where('USR_NAME', $request->post('USR_NAME'))
+            ->where('user_id', $request->post('user_id'))
             ->where('STATUS', FALSE)
             ->get();
 
@@ -104,7 +105,7 @@ class CartController extends Controller
     {
         $user = Auth::user();
 
-        $paniers = Panier::with('article')->where('USR_NAME', $user->USR_NAME)
+        $paniers = Panier::with('article')->where('user_id', $user->id)
             ->where('STATUS', FALSE)
             ->get();
 
@@ -113,6 +114,22 @@ class CartController extends Controller
 
         foreach ($paniers as $panier) {
             $totalPanier += $panier->QUANTITY * $panier->article->ART_P_EURO;
+        }
+
+        if ($paniers->isEmpty() and $step) {
+            return redirect()->route('panier');
+        }
+
+        if ($step === "completed") {
+            Auth::user()->orders()->create([
+                "NBR_ART" => $quantity,
+                "status" => "INCOMPLETE",
+                "price" => $totalPanier
+            ]);
+
+            $paniers->each(function (Panier $panier) {
+                return $panier->update(['STATUS' => TRUE]);
+            });
         }
 
         return view('cart', compact('paniers', 'totalPanier', 'quantity', 'step'));

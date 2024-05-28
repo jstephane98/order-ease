@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,27 +14,18 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const TYPE_ACCOUNT = ["COMMERCIAL", "PARTENAIRE", "ADMIN"];
 
-    protected $table = "USERS";
-
-    public $timestamps = false;
-
-    protected $primaryKey = 'USR_NAME';
-
-    protected $keyType = 'string';
-
-    public $incrementing = false;
-
+    protected $table = "WEB_USERS";
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        "USR_NAME", 'USR_PASSWD', "USR_GROUPE", "USR_RIGHTS", "SAL_CODE",
-        "USR_WSTLCU", "USR_DTLAST", "USR_DORT", "USR_DTMAJ", "USR_USRMAJ",
-        "USR_NUMMAJ", 'email', 'password', 'social_name', 'social_id',
-        'social_token', 'social_refresh_token',
+        'name', 'email', 'password', 'social_name', 'social_id',
+        'social_token', 'social_refresh_token', 'email_verified_at',
+        'remember_token', 'type'
     ];
 
     /**
@@ -58,6 +50,11 @@ class User extends Authenticatable
 
     public function panier(): HasOne
     {
-        return $this->hasOne(User::class, 'USR_NAME');
+        return $this->hasOne(Panier::class, 'user_id');
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 }

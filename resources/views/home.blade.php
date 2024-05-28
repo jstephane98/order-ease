@@ -75,9 +75,9 @@
             </div>
 
             @foreach($articles as $article)
-                <div class="grid justify-between grid-cols-2 bg-white overflow-hidden shadow-sm hover:shadow-xl sm:rounded-sm transition ease-in-out duration-150 mb-4 p-4">
+                <div class="flex justify-between grid-cols-2 bg-white overflow-hidden shadow-sm hover:shadow-xl sm:rounded-sm transition ease-in-out duration-150 mb-4 p-4">
                     <div class="flex m-3">
-                        <img src="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}" alt="" class="w-[60%] h-[60%] mr-5">
+                        <img src="data:image/jpeg;base64,{{ base64_encode($article->ART_IMAGE) }}" alt="" class="w-[10rem] mr-5">
                         <div class="flex flex-col ">
                             <a class="hover:no-underline" href="{{ route('show-article', $article->ART_CODE) }}">
                                 <span class="font-bold text-blue-950">{{ $article->ART_LIB }}</span>
@@ -87,7 +87,7 @@
                     </div>
 
                     <div class="">
-                        <div class="p-2 font-bold text-red-600 bg-amber-200 text-[32px] w-[60%] text-center rounded-xl">
+                        <div class="p-2 font-bold text-red-600 bg-amber-200 text-[32px] text-center rounded-xl">
                             {{ $article->ART_P_EURO }}€
                         </div>
                         <p class="flex-col mt-4 mb-4">
@@ -101,7 +101,7 @@
                                 data-article-amount="{{ $article->ART_P_EURO }}€"
                                 id="btn-cart-{{ $article->ART_CODE }}"
                                 data-article-code="{{ $article->ART_CODE }}"
-                                class="text-white bg-red-600 p-2 rounded-md font-bold hover:bg-red-700 btn-cart">
+                                class="text-white w-full bg-red-600 p-2 rounded-md font-bold hover:bg-red-700 btn-cart">
                             Ajouter au panier
                         </button>
                     </div>
@@ -109,7 +109,9 @@
             @endforeach
 
             <div class="flex justify-center items-center mt-10">
-                <button id="preview-button" class="bg-red-200 text-red-600 hover:text-red-600 mr-2 rounded">
+                <button @disabled(is_null($articles->previousPageUrl())) id="preview-button"
+                        class="@if(is_null($articles->previousPageUrl())) bg-red-50 text-red-200 hover:text-red-200 @else bg-red-200 text-red-600 hover:text-red-600 @endif mr-2 rounded"
+                >
                     <i class='bx bx-chevron-left text-4xl'></i>
                 </button>
                 <select name="" id="selected-page" class="rounded ">
@@ -117,7 +119,10 @@
                         <option value="{{ $page }}" @if($page === $articles->currentPage()) selected @endif>{{ $page }} sur {{ $articles->lastPage() }}</option>
                     @endforeach
                 </select>
-                <button id="next-button" class="bg-red-200 text-red-600 hover:text-red-600 ml-2 rounded"><i class='bx bx-chevron-right text-4xl'></i></button>
+                <button @disabled(is_null($articles->nextPageUrl())) id="next-button"
+                        class="@if(is_null($articles->nextPageUrl())) bg-red-50 text-red-200 hover:text-red-200 @else bg-red-200 text-red-600 hover:text-red-600 @endif ml-2 rounded">
+                    <i class='bx bx-chevron-right text-4xl'></i>
+                </button>
             </div>
         </div>
     </div>
@@ -155,7 +160,7 @@
                         // Send data to cart
                         sendRequest('/api/add-cart', {
                             "ART_CODE": code,
-                            "USR_NAME": "{{ Auth::user()->USR_NAME }}",
+                            "user_id": "{{ Auth::user()->id }}",
                             "QUANTITY": 1,
                             "INCREMENT": 1
                         }, "POST").then((data) => {

@@ -80,7 +80,7 @@
                     // Send data to cart
                     addCart('/api/add-cart', {
                         "ART_CODE": code,
-                        "USR_NAME": "{{ Auth::user()->USR_NAME }}",
+                        "user_id": "{{ Auth::user()->id }}",
                         "QUANTITY": selected.value,
                         "INCREMENT": 0
                     }).then((data) => {

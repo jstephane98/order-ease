@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,16 +17,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::any('/articles', [HomeController::class, 'home'])->name('home');
-Route::get('/article/{article:ART_CODE}', [HomeController::class, 'showArticle'])->name("show-article");
 
 Route::middleware('auth')->group(function () {
-    Route::get('/panier/{step?}', [CartController::class, 'showCart'])->name('panier');
-});
+    Route::any('/articles', [HomeController::class, 'home'])->name('home');
+    Route::get('/article/{article:ART_CODE}', [HomeController::class, 'showArticle'])->name("show-article");
 
-Route::get('/dashboard', function () {
-    return view('home');
-})->name('dashboard');
+    Route::get('/panier/{step?}', [CartController::class, 'showCart'])->name('panier');
+    Route::get('/orders/save', [OrderController::class, 'store'])->name('orders.save');
+
+    Route::prefix('admin')->middleware('is_admin')->group(function () {
+       Route::get("/orders", [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('admin:order.index');
+    });
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

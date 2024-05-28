@@ -19,9 +19,10 @@ class Panier extends Model
 
     protected $fillable = [
         'ART_CODE',
-        'USR_NAME',
         'QUANTITY',
         'STATUS',
+        'user_id',
+        'order_id',
     ];
 
     public function article(): HasOne
@@ -31,6 +32,6 @@ class Panier extends Model
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, 'USR_NAME');
+        return $this->hasOne(User::class);
     }
 }
