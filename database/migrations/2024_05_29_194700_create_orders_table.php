@@ -10,11 +10,12 @@ return new class extends Migration {
         Schema::create('ORDERS', function (Blueprint $table) {
             $table->id();
             $table->integer('NBR_ART')->comment("Nombre d'article");
-            $table->enum("status", ["INCOMPLETE", "COMPLETE"]);
+            $table->string("status"); // CREATED, INCOMPLETE, COMPLETED
             $table->integer("price");
             $table->foreignId('user_id')->references('id')->on('WEB_USERS')->cascadeOnDelete();
 
-            $table->timestamps();
+            $table->string("created_at");
+            $table->string("updated_at");
         });
     }
 

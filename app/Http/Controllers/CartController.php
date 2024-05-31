@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Order;
 use App\Models\Panier;
+use App\Models\Tiers;
 use App\Models\User;
 use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +32,7 @@ class CartController extends Controller
 
         $panier = Panier::where('user_id', $request->post('user_id'))
             ->where('ART_CODE', $request->post('ART_CODE'))
-            ->where('STATUS', FALSE)
+            ->where('STATUS', 0)
             ->first();
 
         if ($panier) {
@@ -46,12 +48,13 @@ class CartController extends Controller
                 'ART_CODE' => $request->post('ART_CODE'),
                 'user_id' => $request->post('user_id'),
                 'QUANTITY' => $request->post('QUANTITY'),
+                "STATUS" => 0
             ]);
         }
 
         $paniers = Panier::with('article')
             ->where('user_id', $request->post('user_id'))
-            ->where('STATUS', FALSE)
+            ->where('STATUS', 0)
             ->get();
 
         $totalPanier = 0;
@@ -77,14 +80,14 @@ class CartController extends Controller
 
         $artPanier = Panier::where('ART_CODE', $request->post('ART_CODE'))
             ->where('user_id', $request->post('user_id'))
-            ->where('STATUS', FALSE)
+            ->where('STATUS', 0)
             ->first();
 
         $artPanier->delete();
 
         $paniers = Panier::with('article')
             ->where('user_id', $request->post('user_id'))
-            ->where('STATUS', FALSE)
+            ->where('STATUS', 0)
             ->get();
 
         $totalPanier = 0;
@@ -105,8 +108,9 @@ class CartController extends Controller
     {
         $user = Auth::user();
 
-        $paniers = Panier::with('article')->where('user_id', $user->id)
-            ->where('STATUS', FALSE)
+        $paniers = Panier::with('article')
+            ->where('user_id', $user->id)
+            ->where('STATUS', 0)
             ->get();
 
         $totalPanier = 0;
@@ -116,25 +120,82 @@ class CartController extends Controller
             $totalPanier += $panier->QUANTITY * $panier->article->ART_P_EURO;
         }
 
-        if ($paniers->isEmpty() and $step) {
-            return redirect()->route('panier');
-        }
+        $orderCreated = Auth::user()->orders()
+            ->where("status", "CREATED")
+            ->orWhere("status", "UPDATED")
+            ->orWhere("status", "CART")
+            ->first();
 
-        if ($step === "completed") {
-            $order = Auth::user()->orders()->create([
-                "NBR_ART" => $quantity,
-                "status" => "INCOMPLETE",
-                "price" => $totalPanier
-            ]);
+        $tiers = collect();
+        $tier = null;
 
-            $paniers->each(function (Panier $panier) use ($order) {
-                return $panier->update([
-                    'STATUS' => TRUE,
-                    "order_id" => $order->id
+        if (! $orderCreated) {
+
+            if ($step === "livraison") {
+                $tiers = Tiers::where('PCF_TYPE', "c")->get();
+            }
+
+            if ($step === "confirmation") {
+                $order = Auth::user()->orders()->create([
+                    "NBR_ART" => $quantity,
+                    "status" => "CREATED",
+                    "price" => $totalPanier,
+                    "PCF_CODE" => \request()->get('partner')
                 ]);
-            });
+
+                foreach ($paniers as $panier) {
+                    $panier->update([
+                        "order_id" => $order->id
+                    ]);
+                }
+
+                $tier = $order->tier;
+            }
+        }
+        else {
+            if ($step === "completed") {
+                Auth::user()->orders()
+                    ->where('status', "CREATED")
+                    ->first()
+                    ->update(['status' => "INCOMPLETE"]);
+
+                $paniers->each(function (Panier $panier) use ($orderCreated) {
+                    return $panier->update([
+                        'STATUS' => 1,
+                    ]);
+                });
+            }
+            elseif ($step === "confirmation") {
+                $orderCreated->update([
+                    "status" => "CREATED",
+                    "PCF_CODE" => request()->get('partner')
+                ]);
+
+                $tier = $orderCreated->tier;
+            }
+            elseif ($step === "livraison") {
+                $orderCreated->update(["status" => "UPDATED"]);
+                $tiers = Tiers::where('PCF_TYPE', "c")->get();
+                $tier = $orderCreated->tier;
+            }
+            else {
+                if (request()->get('update')) {
+                    $orderCreated->update(["status" => "CART"]);
+                    $step = null;
+                }
+                else {
+                    if ($orderCreated->status === "UPDATED") {
+                        $step = "livraison";
+                        $tiers = Tiers::where('PCF_TYPE', "c")->get();
+                    }
+                    else {
+                        $step = "confirmation";
+                        $tier = $orderCreated->tier;
+                    }
+                }
+            }
         }
 
-        return view('cart', compact('paniers', 'totalPanier', 'quantity', 'step'));
+        return view('cart', compact('paniers', 'totalPanier', 'quantity', 'step', 'tiers', 'tier'));
     }
 }

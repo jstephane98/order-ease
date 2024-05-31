@@ -24,6 +24,9 @@
                                     <th class="px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap min-w-140-px">
                                         Date de création
                                     </th>
+                                    <th class="hidden px-4 bg-gray-50 text-gray-700 align-middle py-3 text-xs font-semibold text-left uppercase border-l-0 border-r-0 whitespace-nowrap min-w-140-px">
+                                        Actions
+                                    </th>
                                 </thead>
                                 <tbody class="divide-y divide-gray-100 text-left font-bold">
                                     @foreach($users->items() as $user)
@@ -42,6 +45,17 @@
                                             </td>
                                             <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4">
                                                 {{ $user->created_at->diffForHumans() }}
+                                            </td>
+                                            <td class="border-t-0 px-4 align-middle text-xs whitespace-nowrap p-4 hidden">
+                                                <div class="">
+                                                    <a href="update-user-modal-{{ $user->id }}" class="py-2 px-1 bg-blue-50 border border-blue-700 rounded text-blue-700 mr-5 hover:bg-blue-700 hover:text-blue-50 hover:border transition ease-in hover:no-underline">
+                                                        Modifier
+                                                    </a>
+                                                    <a href="{{ $user->id }}" class="py-2 px-1 bg-red-600 border border-red-50 rounded text-red-50 mr-5 hover:bg-red-50 hover:text-red-600 hover:border hover:border-red-700 transition ease-in hover:no-underline">
+                                                        Supprimer
+                                                    </a>
+
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -64,14 +78,20 @@
             <div class="uk-modal-body">
                 <form method="POST" action="{{ route('store:user') }}">
                     @csrf
+
                     <!-- Type account -->
                     <div class="mt-4">
-                        <label for="type">Type de compte <span class="text-red-600">*</span></label>
-                        <select name="type" id="type" class="w-full rounded p-3 mt-2 border-gray-400">
+                        <label for="type-account">Type de compte <span class="text-red-600">*</span></label>
+                        <select name="type" id="type-account" class="w-full rounded p-3 mt-2 border-gray-400">
                             @foreach(\App\Models\User::TYPE_ACCOUNT as $type)
                                 <option value="{{ $type }}">{{ $type }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <!-- Liste des tiers -->
+                    <div class="mt-4" id="tiers">
+
                     </div>
 
                     <!-- Nom -->
@@ -111,6 +131,35 @@
             @if(session('success'))
                 UIkit.modal.dialog(`<p class="text-xl text-green-600 p-5 text-center item-center"> <i class='bx bx-check text-2xl'></i> {{ session('success') }}</p>`);
             @endif
+
+            @if(session('error'))
+                UIkit.modal.dialog(`<p class="text-xl text-red-600 p-5 font-bold text-center item-center"> <i class='bx bx-x text-2xl'></i> {{ session('error') }}</p>`);
+            @endif
+
+            // select tiers
+            let accountType = document.getElementById("type-account");
+            let selectTiers = document.getElementById("select-tiers");
+            let divTiers = document.getElementById("tiers");
+
+            accountType.addEventListener("change", (e) => {
+                if (e.target.value === "PARTENAIRE") {
+                    let options = ''
+
+                    @foreach($tiers as $tier)
+                       options += '<option value="{{ $tier->PCF_CODE }}">{{ $tier->PCF_RS }}</option>'
+                    @endforeach
+
+                    divTiers.innerHTML = `
+                        <label for="select-tiers">Selectionner les tiers <span class="text-red-600">*</span></label>
+                        <select multiple name="tiers[]" id="select-tiers" class="w-full rounded p-3 mt-2 border-gray-400">
+                            ${options}
+                        </select>
+                    `
+                }
+                else {
+                    divTiers.innerText = '';
+                }
+            })
         </script>
     @endsection
 </x-app-admin>

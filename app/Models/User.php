@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id');
     }
+
+    public function tiers(): HasMany
+    {
+        return $this->hasMany(Tiers::class, 'user_id');
+    }
 }

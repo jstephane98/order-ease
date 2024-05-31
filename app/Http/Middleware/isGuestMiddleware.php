@@ -5,12 +5,12 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class IsAdminMiddleware
+class isGuestMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (\Auth::user()->type === "COMMERCIAL") {
-            return redirect()->route('home');
+        if (\Auth::user()->type !== "COMMERCIAL") {
+            return redirect()->route('admin:order.index');
         }
 
         return $next($request);

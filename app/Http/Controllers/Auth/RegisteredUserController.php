@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tiers;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -35,7 +36,8 @@ class RegisteredUserController extends Controller
         $this->validate($request, [
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', Rules\Password::defaults()],
-            'type' => ['required', 'in:' . implode(",", User::TYPE_ACCOUNT)]
+            'type' => ['required', 'in:' . implode(",", User::TYPE_ACCOUNT)],
+            "tiers" => ["nullable", "array", "in:" . Tiers::implode("PCF_CODE", ',')]
         ], [
             'email.unique' => "Cet email est déjà existant, veillez vous connecter."
         ]);
@@ -46,6 +48,14 @@ class RegisteredUserController extends Controller
             'type' => $request->post('type'),
             'name' => $request->post('name')
         ]);
+
+        if ($request->has('tiers')) {
+            Tiers::whereIn('PCF_CODE', $request->post('tiers'))
+                ->get()
+                ->each(function (Tiers $tiers) use ($user){
+                    return $tiers->update(['user_id' => $user->id]);
+                });
+        }
 
 //        event(new Registered($user));
 

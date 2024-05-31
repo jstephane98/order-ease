@@ -21,15 +21,22 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth')->group(function () {
-    Route::any('/articles', [HomeController::class, 'home'])->name('home');
-    Route::get('/article/{article:ART_CODE}', [HomeController::class, 'showArticle'])->name("show-article");
+
+    Route::middleware('is_guest')->group(function () {
+        Route::any('/articles', [HomeController::class, 'home'])->name('home');
+        Route::get('/article/{article:ART_CODE}', [HomeController::class, 'showArticle'])->name("show-article");
+    });
 
     Route::get('/panier/{step?}', [CartController::class, 'showCart'])->name('panier');
     Route::get('/orders/save', [OrderController::class, 'store'])->name('orders.save');
+    Route::get("order/cancel", [OrderController::class, 'cancel'])->name("order.cancel");
+
+    Route::get('commercial/orders', [\App\Http\Controllers\Commercial\OrderController::class, 'index'])->name("commercial:orders.index");
+
+    Route::get("/orders/{id}", [OrderController::class, 'show'])->name('admin:order.show');
 
     Route::prefix('admin')->middleware('is_admin')->group(function () {
        Route::get("/orders", [OrderController::class, 'index'])->name('admin:order.index');
-       Route::get("/orders/{id}", [OrderController::class, 'show'])->name('admin:order.show');
 
        // Users
         Route::get('/users', [UserController::class, 'index'])->name("admin:user.index");

@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Casts\ImageCast;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Article extends Model
 {
     public $timestamps = false;
+
+    protected $primaryKey = "ART_CODE";
 
     protected $table = 'ARTICLES';
 
@@ -130,4 +133,8 @@ class Article extends Model
         "ART_IMAGE" => ImageCast::class
     ];
 
+    public function paniers(): HasMany
+    {
+        return $this->hasMany(Panier::class, 'ART_CODE', 'ART_CODE');
+    }
 }

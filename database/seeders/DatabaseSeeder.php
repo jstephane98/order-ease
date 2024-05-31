@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
          \App\Models\User::factory()->create([
              "email" => fake()->email,
              'password' => \Hash::make('Pa$$w0rd!'),
-             "type" => "COMMERCIAL"
+             "type" => "ADMIN"
          ]);
     }
 }

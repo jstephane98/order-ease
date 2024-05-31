@@ -13,9 +13,9 @@ class Panier extends Model
 
     protected $table = 'PANIERS';
 
-    protected $primaryKey = 'ART_CODE';
-
-    protected $keyType = 'string';
+//    protected $primaryKey = 'ART_CODE';
+//
+//    protected $keyType = 'string';
 
     protected $fillable = [
         'ART_CODE',
@@ -25,9 +25,9 @@ class Panier extends Model
         'order_id',
     ];
 
-    public function article(): HasOne
+    public function article(): BelongsTo
     {
-        return $this->hasOne(Article::class, 'ART_CODE');
+        return $this->belongsTo(Article::class, 'ART_CODE');
     }
 
     public function user(): HasOne
