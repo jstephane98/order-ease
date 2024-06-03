@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,7 +26,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password', 'social_name', 'social_id',
         'social_token', 'social_refresh_token', 'email_verified_at',
-        'remember_token', 'type'
+        'remember_token', 'type', 'TIER_CODE'
     ];
 
     /**
@@ -58,8 +59,8 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'user_id');
     }
 
-    public function tiers(): HasMany
+    public function tier(): BelongsTo
     {
-        return $this->hasMany(Tiers::class, 'user_id');
+        return $this->belongsTo(Tiers::class,'TIER_CODE', 'PCF_CODE');
     }
 }

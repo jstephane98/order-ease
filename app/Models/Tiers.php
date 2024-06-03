@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Tiers extends Model{
     public $timestamps = false;
@@ -26,9 +27,9 @@ class Tiers extends Model{
         'user_id',
     ];
 
-    public function user(): BelongsTo
+    public function user(): HasOne
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class, 'TIER_CODE', 'PCF_CODE');
     }
 
     public function orders(): HasMany

@@ -14,7 +14,7 @@ class UserController extends Controller
         $perPage = $request->get('per_page') ?? 50;
         $page = $request->get('page') ?? 1;
 
-        $users = User::with("tiers")
+        $users = User::with("tier")
             ->latest()->paginate(perPage: $perPage, page: $page);
 
         $tiers = Tiers::where('PCF_TYPE', 'c')->get();

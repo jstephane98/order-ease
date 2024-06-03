@@ -28,12 +28,8 @@ class OrderController extends Controller
         $ordersId = [];
 
         if (Auth::user()->type === "PARTENAIRE") {
-            Auth::user()->tiers->each(function (Tiers $tiers) use (&$ordersId){
-                $ordersId[] = [$tiers->orders()->pluck('id')->toArray()];
-            });
+            $ordersId = Auth::user()->tier->orders()->pluck('id')->toArray();
         }
-
-        $ordersId = Arr::flatten($ordersId);
 
         $orders = Order::with(['user', "tier"])
             ->when(Auth::user()->type === "PARTENAIRE", function (Builder $builder) use ($ordersId) {

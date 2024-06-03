@@ -90,9 +90,7 @@
                     </div>
 
                     <!-- Liste des tiers -->
-                    <div class="mt-4" id="tiers">
-
-                    </div>
+                    <div class="mt-4" id="tiers"></div>
 
                     <!-- Nom -->
                     <div class="mt-4">
@@ -146,12 +144,12 @@
                     let options = ''
 
                     @foreach($tiers as $tier)
-                       options += '<option value="{{ $tier->PCF_CODE }}">{{ $tier->PCF_RS }}</option>'
+                       options += '<option value="{{ $tier->PCF_CODE }}">{{ $tier->PCF_RS }} <br>- #{{ $tier->PCF_CODE }}</option>'
                     @endforeach
 
                     divTiers.innerHTML = `
                         <label for="select-tiers">Selectionner les tiers <span class="text-red-600">*</span></label>
-                        <select multiple name="tiers[]" id="select-tiers" class="w-full rounded p-3 mt-2 border-gray-400">
+                        <select name="tier" id="select-tiers" class="w-full rounded p-3 mt-2 border-gray-400">
                             ${options}
                         </select>
                     `

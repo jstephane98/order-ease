@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', Rules\Password::defaults()],
             'type' => ['required', 'in:' . implode(",", User::TYPE_ACCOUNT)],
-            "tiers" => ["nullable", "array", "in:" . Tiers::implode("PCF_CODE", ',')]
+            "tier" => ["nullable", "in:" . Tiers::implode("PCF_CODE", ',')]
         ], [
             'email.unique' => "Cet email est déjà existant, veillez vous connecter."
         ]);
@@ -46,16 +46,9 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'type' => $request->post('type'),
-            'name' => $request->post('name')
+            'name' => $request->post('name'),
+            'TIER_CODE' => $request->post('tier'),
         ]);
-
-        if ($request->has('tiers')) {
-            Tiers::whereIn('PCF_CODE', $request->post('tiers'))
-                ->get()
-                ->each(function (Tiers $tiers) use ($user){
-                    return $tiers->update(['user_id' => $user->id]);
-                });
-        }
 
 //        event(new Registered($user));
 
