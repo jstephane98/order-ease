@@ -43,7 +43,7 @@ class OrderController extends Controller
 
     public function show(int $order_id)
     {
-        $order = Order::with(['panier', 'panier.article:ART_CODE,ART_LIB,ART_P_EURO,ART_IMAGE'])->find($order_id);
+        $order = Order::with(['panier', 'panier.article:ART_CODE,ART_LIB,ART_P_EURO,ART_IMAGE,FAR_CODE'])->find($order_id);
         return response()->json($order->toArray());
     }
 
@@ -56,5 +56,20 @@ class OrderController extends Controller
             return $panier->update(['STATUS' => -1]);
         });
         return redirect('/articles');
+    }
+
+    public function validOrder(Request $request)
+    {
+        $request->validate([
+            'order_id' => ['required', 'exists:orders,id']
+        ]);
+
+        $order = Order::find($request->order_id);
+        $order->update(['status' => "COMPLETED"]);
+        $order->panier->each(function (Panier $panier) {
+            $panier->update(['STATUS' => 2]);
+        });
+
+        return redirect()->back()->with('success', 'La commande a bien été validée !');
     }
 }

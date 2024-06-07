@@ -13,6 +13,13 @@ class Order extends Model
 
     protected $fillable = ['NBR_ART', 'status', 'price', 'user_id', 'PCF_CODE'];
 
+    const STATUS = [
+        "CREATED" => "En attente",
+        "INPROGRESS" => "En cours de traitement",
+        "COMPLETED" => "Valider",
+        "CANCELED" => "Annuler"
+    ];
+
     protected function price(): Attribute
     {
         return Attribute::make(
@@ -21,13 +28,13 @@ class Order extends Model
         );
     }
 
-//    protected function status(): Attribute
-//    {
-//        return Attribute::make(
-//            get: fn($value, array $attributes) => $value === "INCOMPLETE" ? "Crée" : "Valider",
-//            set: fn($value) => $value,
-//        );
-//    }
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, array $attributes) => self::STATUS[$value],
+            set: fn($value) => $value,
+        );
+    }
 
     public function user(): BelongsTo
     {

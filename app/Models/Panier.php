@@ -20,7 +20,7 @@ class Panier extends Model
     protected $fillable = [
         'ART_CODE',
         'QUANTITY',
-        'STATUS',
+        'STATUS', // 0: in panier, 1: en cours de livraison, 2: livrer, -1: annuler
         'user_id',
         'order_id',
     ];

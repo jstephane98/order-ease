@@ -9,7 +9,7 @@ class IsAdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (\Auth::user()->type === "COMMERCIAL") {
+        if (\Auth::user()->type !== "ADMIN") {
             return redirect()->route('home');
         }
 

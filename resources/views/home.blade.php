@@ -6,9 +6,9 @@
     </x-slot>--}}
 
     <div class="py-12">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6">
 
-            <div class="filter mb-5 bg-blue-100 border border-blue-500 rounded p-5">
+            <div class="filter mb-5 bg-blue-100 border border-blue-500 rounded p-3">
                 <h2 class="text-xl font-bold flex items-center">
                     <i class='bx bx-slider'></i>
                     <span>Recherche avancée</span>
@@ -74,39 +74,11 @@
                 </form>
             </div>
 
-            @foreach($articles as $article)
-                <div class="flex justify-between grid-cols-2 bg-white overflow-hidden shadow-sm hover:shadow-xl sm:rounded-sm transition ease-in-out duration-150 mb-4 p-4">
-                    <div class="flex m-3">
-                        <img src="{{ $article->ART_IMAGE }}" alt="" class="w-[10rem] mr-5">
-                        <div class="flex flex-col ">
-                            <a class="hover:no-underline" href="{{ route('show-article', $article->ART_CODE) }}">
-                                <span class="font-bold text-blue-950">{{ $article->ART_LIB }}</span>
-                            </a>
-                            <span class="text-sm text-gray-500">CODE: {{ $article->ART_CODE }}</span>
-                        </div>
-                    </div>
-
-                    <div class="">
-                        <div class="p-2 font-bold text-red-600 bg-amber-200 text-[32px] text-center rounded-xl">
-                            {{ $article->ART_P_EURO }}€
-                        </div>
-                        <p class="flex-col mt-4 mb-4">
-                        <span class="text-green-500 font-bold text-sm">
-                            <i class='bx bx-check text-white bg-green-400 rounded-full'></i>
-                            <span>Sur commande - en retrait magasin</span>
-                        </span>
-                        </p>
-                        <button data-article-image="{{ $article->ART_IMAGE }}"
-                                data-article-lebele="{{ $article->ART_LIB }}"
-                                data-article-amount="{{ $article->ART_P_EURO }}€"
-                                id="btn-cart-{{ $article->ART_CODE }}"
-                                data-article-code="{{ $article->ART_CODE }}"
-                                class="text-white w-full bg-red-600 p-2 rounded-md font-bold hover:bg-red-700 btn-cart">
-                            Ajouter au panier
-                        </button>
-                    </div>
-                </div>
-            @endforeach
+            <div class="grid grid-cols-2 gap-4">
+                @foreach($articles as $article)
+                    @include('components.article-card', ['article' => $article, 'sameFamily' => false])
+                @endforeach
+            </div>
 
             <div class="flex justify-center items-center mt-10">
                 <button @disabled(is_null($articles->previousPageUrl())) id="preview-button"
@@ -129,73 +101,6 @@
 
     @section('js')
         <script>
-            const addBtnCart = document.querySelectorAll('.btn-cart');
-
-            addBtnCart.forEach((el, index) => {
-                const img = el.getAttribute('data-article-image');
-                const libele = el.getAttribute('data-article-lebele');
-                const amount = el.getAttribute('data-article-amount');
-                const id = el.getAttribute('id')
-                const code = el.getAttribute('data-article-code')
-
-                UIkit.util.on('#' + id, 'click', (e) => {
-                    e.preventDefault();
-                    e.target.blur();
-
-                    @guest
-                        // Open Modal
-                        UIkit.modal.dialog(`
-                            <div class="pt-3">
-                                <h1 class="text-center text-2xl font-bold"><i class='bx bx-x text-white bg-red-400 rounded-full'></i> Ajout au panier </h1>
-                                <hr>
-                                <div class="flex justify-between p-2 items-center">
-                                    <img src="` + img + `" alt="" class="w-[80px] h-[80px] text-center">
-                                    <span class="font-bold">` + libele + `</span>
-                                    <span class="text-red-600 font-bold">` + amount + `</span>
-                                </div>
-                                <div class="text-center pb-3">Connecter vous pour continuer <a href="{{ route('login') }}" class="font-bold">Se connecter</a></div>
-                            </div>
-                        `);
-                    @else
-                        // Send data to cart
-                        sendRequest('/api/add-cart', {
-                            "ART_CODE": code,
-                            "user_id": "{{ Auth::user()->id }}",
-                            "QUANTITY": 1,
-                            "INCREMENT": 1
-                        }, "POST").then((data) => {
-                            console.log(data);
-                        });
-
-                        // Open Modal
-                        UIkit.modal.dialog(`
-                            <div class="pt-3">
-                                <h1 class="text-center text-2xl font-bold"><i class='bx bx-check text-white bg-green-400 rounded-full'></i> Ajouté au panier</h1>
-                                <hr>
-                                <div class="flex justify-between p-2 items-center">
-                                    <img src="` + img + `" alt="" class="w-[80px] h-[80px] text-center">
-                                    <span class="font-bold">` + libele + `</span>
-                                    <span class="text-red-600 font-bold">` + amount + `</span>
-                                </div>
-                                <div class="text-center pb-3"><a href="{{ route('panier') }}"" class="rounded text-white font-semibold bg-red-500 hover:bg-red-600 p-2 hover:text-white">Voir le panier</a></div>
-                            </div>
-                        `);
-                    @endguest
-                });
-            });
-
-            async function sendRequest(url = "", data = {}, method = "") {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify(data),
-                });
-                return response.json();
-            }
-
             // Get Data for filter
             family = document.getElementById("family")
             s_family = document.getElementById("s-family")

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\ImageCast;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Article extends Model
@@ -133,8 +134,22 @@ class Article extends Model
         "ART_IMAGE" => ImageCast::class
     ];
 
+//    protected $appends = ['sameFamilyAvailable'];
+
+    public function sameFamilyAvailable(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Article::query()->where('FAR_CODE', $this->FAR_CODE)->where('ART_CODE', '!=', $this->ART_CODE)->exists(),
+        );
+    }
+
     public function paniers(): HasMany
     {
         return $this->hasMany(Panier::class, 'ART_CODE', 'ART_CODE');
+    }
+
+    public function stock(): BelongsTo
+    {
+        return $this->belongsTo(Stock::class, 'ART_CODE', 'ART_CODE');
     }
 }

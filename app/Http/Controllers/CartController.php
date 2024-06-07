@@ -132,6 +132,9 @@ class CartController extends Controller
         if (! $orderCreated) {
 
             if ($step === "livraison") {
+                if ($user->type === "PARTENAIRE") {
+                    return redirect()->route('panier', ['step' => 'confirmation', 'partner' => $user->tier->PCF_CODE]);
+                }
                 $tiers = Tiers::where('PCF_TYPE', "c")->get();
             }
 
@@ -157,7 +160,7 @@ class CartController extends Controller
                 Auth::user()->orders()
                     ->where('status', "CREATED")
                     ->first()
-                    ->update(['status' => "INCOMPLETE"]);
+                    ->update(['status' => "INPROGRESS"]);
 
                 $paniers->each(function (Panier $panier) use ($orderCreated) {
                     return $panier->update([

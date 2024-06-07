@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('ORDERS', function (Blueprint $table) {
             $table->id();
             $table->integer('NBR_ART')->comment("Nombre d'article");
-            $table->string("status"); // CREATED, INCOMPLETE, COMPLETED
+            $table->string("status"); // CREATED, INPROGRESS, COMPLETED, 
             $table->integer("price");
             $table->foreignId('user_id')->references('id')->on('WEB_USERS')->cascadeOnDelete();
 

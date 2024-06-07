@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="text-center mb-5">
         <h1 class="text-4xl mb-2 mt-2">{{ __("Connexion") }}</h1>
-        <p class="">{{ __("Connectez-vous et prenons la route ensemble. On se retrouve sur Carter-Cash") }}</p>
+        <p class="">{{ __("Connectez-vous et prenons la route ensemble.") }}</p>
     </div>
 
     <!-- Session Status -->

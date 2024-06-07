@@ -178,11 +178,13 @@
                                                 <span>{{ $tier->PCF_VILLE }}</span>
                                                 <span>{{ $tier->PCF_RUE }}</span>
 
-                                                <a href="{{ route("panier", ["step" => "livraison"]) }}"
-                                                   class="mt-5 p-2 bg-yellow-100 border border-yellow-900 text-sm rounded text-yellow-700 font-bold
+                                                @if(Auth::user()->type !== "PARTENAIRE")
+                                                    <a href="{{ route("panier", ["step" => "livraison"]) }}"
+                                                       class="mt-5 p-2 bg-yellow-100 border border-yellow-900 text-sm rounded text-yellow-700 font-bold
                                                           hover:no-underline hover:bg-yellow-700 hover:text-yellow-50 hover:border-opacity-0 transition ease-in">
-                                                    Modifier le magasin choisit
-                                                </a>
+                                                        Modifier le magasin choisit
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>

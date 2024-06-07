@@ -42,5 +42,6 @@
         <script src="https://cdn.jsdelivr.net/npm/uikit@3.21.1/dist/js/uikit-icons.min.js"></script>
 
     @yield('js')
+    @yield('article:card.js')
     </body>
 </html>

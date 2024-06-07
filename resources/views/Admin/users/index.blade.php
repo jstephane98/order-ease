@@ -109,7 +109,7 @@
                     <!-- Password -->
                     <div class="mt-4">
                         <label for="password_password">Mot de passe <span class="text-red-600">*</span></label>
-                        <x-input-password :name="'password'" :id="'password'" :placeholder="__('Mot de passe*')"/>
+                        <x-input-password :name="'password'" :id="'password'" :placeholder="__('Mot de passe*')" />
 
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
@@ -132,6 +132,10 @@
 
             @if(session('error'))
                 UIkit.modal.dialog(`<p class="text-xl text-red-600 p-5 font-bold text-center item-center"> <i class='bx bx-x text-2xl'></i> {{ session('error') }}</p>`);
+            @endif
+
+            @if(! $errors->isEmpty())
+                UIkit.modal("#modal-sections").show();
             @endif
 
             // select tiers

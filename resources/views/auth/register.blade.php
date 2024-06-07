@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="text-center">
         <h1 class="text-4xl mb-2 mt-2">{{ __("Inscription") }}</h1>
-        <p class="">{{ __("Inscrivez-vous et prenons la route ensemble. On se retrouve sur Carter-Cash") }}</p>
+        <p class="">{{ __("Inscrivez-vous et prenons la route ensemble. On se retrouve sur Order-Ease") }}</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}">
