@@ -22,3 +22,11 @@ OrderEase is a web-based quick order application where users can :
 - `npm install && npm run dev`
 - `php artisan migrate`
 - `php artisan serve`
+
+## Images
+
+<p><img src="order-ease-md/Capture d&apos;écran 2024-06-08 084531.png" width="400" alt="Order Ease Logo"></p>
+<p><img src="order-ease-md/d75c5178-9400-4872-a5aa-426e93efdf17.jpg" width="400" alt="Order Ease Logo"></p>
+<p><img src="order-ease-md/Capture d&apos;écran 2024-06-08 084606.png" width="400" alt="Order Ease Logo"></p>
+<p><img src="order-ease-md/Capture d’écran_8-6-2024_8490_order-ease.dev.jpeg" width="400" alt="Order Ease Logo"></p>
+<p><img src="order-ease-md/Capture d&apos;écran 2024-06-08 085051.png" width="400" alt="Order Ease Logo"></p>
