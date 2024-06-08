@@ -14,10 +14,12 @@ class Order extends Model
     protected $fillable = ['NBR_ART', 'status', 'price', 'user_id', 'PCF_CODE'];
 
     const STATUS = [
-        "CREATED" => "En attente",
+        "CREATED" => "Crée",
         "INPROGRESS" => "En cours de traitement",
+        "UPDATED" => "En attente",
         "COMPLETED" => "Valider",
-        "CANCELED" => "Annuler"
+        "CANCELED" => "Annuler",
+        "CART" => "Panier en cours de modification",
     ];
 
     protected function price(): Attribute

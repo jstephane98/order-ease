@@ -5,7 +5,6 @@
     <x-text-input id="{{ $id }}_password" class="block mt-1 w-full"
                   type="password"
                   name="{{ $name }}"
-                  required
                   placeholder="{{ $placeholder }}"
             />
 

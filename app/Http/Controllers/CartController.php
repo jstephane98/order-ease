@@ -187,7 +187,7 @@ class CartController extends Controller
                     $step = null;
                 }
                 else {
-                    if ($orderCreated->status === "UPDATED") {
+                    if ($orderCreated->status === Order::STATUS["UPDATED"]) {
                         $step = "livraison";
                         $tiers = Tiers::where('PCF_TYPE', "c")->get();
                     }

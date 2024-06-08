@@ -53,7 +53,7 @@
                 {{ $order->price }}€
             </td>
             <td class="border-t-0 px-4  text-xs whitespace-nowrap p-4">
-                <span class="p-1 rounded font-bold {{ $order->status == App\Models\Order::STATUS['CREATED'] ? 'bg-blue-50 text-blue-500' : ($order->status == App\Models\Order::STATUS['INPROGRESS'] ? 'bg-yellow-50 text-yellow-500' : ($order->status == App\Models\Order::STATUS['CANCELED'] ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-500')) }}">{{ $order->status }}</span>
+                <span class="p-1 rounded font-bold {{ $order->status == App\Models\Order::STATUS['CREATED'] ? 'bg-blue-100 text-blue-500' : ($order->status == App\Models\Order::STATUS['INPROGRESS'] ? 'bg-orange-100 text-orange-500' : ($order->status == App\Models\Order::STATUS['CANCELED'] ? 'bg-red-100 text-red-500' : ($order->status == App\Models\Order::STATUS['UPDATED'] ? 'bg-fuchsia-100 text-fuchsia-500' : ($order->status === App\Models\Order::STATUS['CART'] ? 'bg-gray-100 text-gray-500' : 'bg-green-100 text-green-500')))) }}">{{ $order->status }}</span>
             </td>
             <td class="border-t-0 px-4  flex flex-col whitespace-nowrap p-4">
                 <span>{{ $order->tier->PCF_RS }}</span>
@@ -63,14 +63,14 @@
                 {{ $order->created_at->diffForHumans() }}
             </td>
             <td class="border-t-0 px-4  text-xs whitespace-nowrap p-4">
-                <div class="flex justify-around">
+                <div class="flex">
                     <button class="p-2 rounded bg-blue-500 border text-white font-bold hover:border hover:text-blue-500 hover:bg-white hover:border-blue-500 transition ease-in show-detail" id="btn-show-{{ $order->id }}"
                             data-order-id="{{ $order->id }}">
                         Details
                     </button>
 
                     @if(Auth::user()->type == 'ADMIN' && $order->status == App\Models\Order::STATUS['INPROGRESS'])
-                        <button class="p-2 rounded text-green-500 border border-green-500 font-bold hover:text-white hover:bg-green-500 transition ease-in valid-order" id="btn-validate-{{ $order->id }}"
+                        <button class="p-2 ml-5 rounded text-green-500 border border-green-500 font-bold hover:text-white hover:bg-green-500 transition ease-in valid-order" id="btn-validate-{{ $order->id }}"
                                 data-order-id="{{ $order->id }}">
                             Valider
                         </button>
@@ -83,7 +83,9 @@
     </tbody>
 </table>
 
-{{ $orders->links() }}
+<div class="mt-10">
+    {{ $orders->links() }}
+</div>
 
 @section($commercial ? "js" : "admin:js")
     <script>

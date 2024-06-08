@@ -18,7 +18,6 @@
                     </div>
                 </div>
             </div>
-            {{ $orders->links() }}
         </main>
     </div>
 </x-app-admin>

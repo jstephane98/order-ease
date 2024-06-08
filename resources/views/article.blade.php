@@ -58,14 +58,14 @@
         <div class="mt-10 px-20">
             <h2 class="text-center font-bold">Articles similaires</h2>
 
-            <div class="flex">
-                <div class="grid grid-cols-{{$sameFamilyArticles->count()}} gap-4 w-[90%] grid-flow-row auto-rows-max">
+            <div>
+                <div class="flex justify-center gap-4 grid-flow-row auto-rows-max">
                     @foreach($sameFamilyArticles as $sameArticle)
                         @include('components.article-card', ['article' => $sameArticle, 'sameFamily' => true])
                     @endforeach
                 </div>
 
-                <div class="flex items-center ml-5">
+                <div class="text-center mt-5">
                     <form action="{{ route('home') }}" method="POST">
                         @csrf
 

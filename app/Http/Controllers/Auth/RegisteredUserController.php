@@ -39,7 +39,10 @@ class RegisteredUserController extends Controller
             'type' => ['required', 'in:' . implode(",", User::TYPE_ACCOUNT)],
             "tier" => ["nullable", "in:" . Tiers::implode("PCF_CODE", ',')]
         ], [
-            'email.unique' => "Cet email est déjà existant, veillez vous connecter."
+            'email.required' => "Email est requis.",
+            'email.unique' => "Cet email est déjà existant, veillez vous connecter.",
+            "email.email" => "Veillez renseignez une adresse mail valide !",
+            "password.required" => "Le mot de passe est requis !",
         ]);
 
         $user = User::create([

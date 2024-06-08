@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
        // Users
         Route::get('/users', [UserController::class, 'index'])->name("admin:user.index");
         Route::post('register', [RegisteredUserController::class, 'store'])->name("store:user");
+        Route::put('users', [UserController::class, 'update'])->name("update:user");
+        Route::patch('/users/activate', [UserController::class, 'activate'])->name("activate:user");
     });
 });
 
